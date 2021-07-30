@@ -1,12 +1,12 @@
 class Main implements EventListenerObject{
 
     public localStorage: Storage;
-    public listaVehiculos: Array<Vehiculo>;
+    public listaClientes: Array<Cliente>;
     public utils: Utils;
 
     constructor(){
         this.localStorage = window.localStorage;
-        this.listaVehiculos = new Array<Vehiculo>();
+        this.listaClientes = new Array<Cliente>();
         this.utils = new Utils();
     }
 
@@ -20,6 +20,9 @@ class Main implements EventListenerObject{
           case "btnAlta":
             this.displayForm(true);
             break;
+          case "btnLimpiar":
+            this.LimpiarLocalStorage();
+            break;
           case "btnCerrar":
             this.displayForm(false);
             break;
@@ -27,64 +30,59 @@ class Main implements EventListenerObject{
             this.displayForm(false);
             break;
           case "btnAgregar":
-            this.AgregarVehiculo();
+            this.AgregarUno();
             break;
+          /*
           case "tipoDeVehiculo":
-            this.HabilitarOpcionesPorTipo();
+            this.HabilitarOpcionesPorSexo();
             break;
+            */
           case "aplicaFiltro":
-            this.FiltrarPorTipo();
+            this.FiltrarPorSexo();
             break;
           case "btnPromedio":
             this.CalcularPromedio();
             break;
           case "chbId":
-            this.AgregarATabla(this.listaVehiculos);
+            this.AgregarATabla(this.listaClientes);
             break;
-          case "chbMarca":
-            this.AgregarATabla(this.listaVehiculos);
+          case "chbNombre":
+            this.AgregarATabla(this.listaClientes);
             break;
-          case "chbModelo":
-            this.AgregarATabla(this.listaVehiculos);
+          case "chbApellido":
+            this.AgregarATabla(this.listaClientes);
             break;
-          case "chbPrecio":
-            this.AgregarATabla(this.listaVehiculos);
+          case "chbEdad":
+            this.AgregarATabla(this.listaClientes);
             break;
           default:
             break;
         }  
     }
     
-    public PushearVehiculo(id:number) {
-      var marca = (<HTMLInputElement>document.getElementById("marcaVehiculo")).value;
-      var modelo = (<HTMLInputElement>document.getElementById("modeloVehiculo")).value;
-      var precio = (<HTMLInputElement>document.getElementById("precioVehiculo")).value;
-      var tipoVehiculo = (<HTMLInputElement>document.getElementById("tipoDeVehiculo")).value;
-      var tipoCamioneta = (<HTMLInputElement>document.getElementById("tipoCamioneta")).value;
-      var cantPuertas = (<HTMLInputElement>document.getElementById("cantidadPuertas")).value;
+    public PushearUno(id:number) {
+      var nombre = (<HTMLInputElement>document.getElementById("inputNombre")).value;
+      var apellido = (<HTMLInputElement>document.getElementById("inputApellido")).value;
+      var edad = (<HTMLInputElement>document.getElementById("inputEdad")).value;
+      var sexo = (<HTMLInputElement>document.getElementById("selectSexo")).value;
 
-      if (tipoVehiculo === "Auto") {
-          let auto: Auto = new Auto(id, marca, modelo, parseInt(precio), parseInt(cantPuertas));
-          this.listaVehiculos.push(auto);
-      } 
-      else if (tipoVehiculo === "Camioneta") {
-          if (tipoCamioneta == "4X4") {
-              var camioneta: Camioneta = new Camioneta(id, marca, modelo, parseInt(precio), true);
-              this.listaVehiculos.push(camioneta);
-          }
-          else {
-              var camioneta: Camioneta = new Camioneta(id, marca, modelo, parseInt(precio), false);
-              this.listaVehiculos.push(camioneta);
-          }
+      if(sexo == "Masculino") {
+        let cliente: Cliente = new Cliente(id, nombre, apellido, parseInt(edad), Sexo.Masculino);
+        this.listaClientes.push(cliente);
       }
+      else {
+        let cliente: Cliente = new Cliente(id, nombre, apellido, parseInt(edad), Sexo.Femenino);
+        this.listaClientes.push(cliente);
+      }
+      
     }
    
-    public AgregarVehiculo() {
+    public AgregarUno() {
       let id = 1; 
-      if(this.listaVehiculos.length != 0)
+      if(this.listaClientes.length != 0)
       {
-          let vehiculos = this.listaVehiculos;
-          id = vehiculos.reduce(function (last, i){
+          let cliente = this.listaClientes;
+          id = cliente.reduce(function (last, i){
               if(i.id >= last) {
                   return i.id + 1;
               }
@@ -95,30 +93,35 @@ class Main implements EventListenerObject{
               id + 1;
           }
       }
-      this.PushearVehiculo(id);
-      this.AgregarATabla(this.listaVehiculos);
+      this.PushearUno(id);
+      this.AgregarATabla(this.listaClientes);
       this.displayForm(false);
   }
   
-  public EliminarUnVehiculo(id:number) {
-    this.listaVehiculos.splice(id , 1);
-    this.AgregarATabla(this.listaVehiculos);
+  public EliminarUno(id:number) {
+    this.listaClientes.splice(id , 1);
+    this.AgregarATabla(this.listaClientes);
   }
-  public AgregarATabla(listaVehiculos: Array<Vehiculo>) :void {
 
-    var marca: string = '';
-    var modelo: string = '';
-    var precio: any;
+  public LimpiarLocalStorage() {
+
+    localStorage.clear();
+  }
+
+  public AgregarATabla(listaClientes: Array<Cliente>) :void {
+
+    var nombre: string = '';
+    var apellido: string = '';
+    var edad: any;
     var id: any;
-    var caracteristica: any;
-    var tipoVehiculo: string = '';
+    var sexo: string = '';
 
     var tbody: HTMLTableElement = <HTMLTableElement>this.utils.$("tbody");
     var trheader: HTMLTableElement = <HTMLTableElement>this.utils.$("trhead");
     let chbId = <HTMLInputElement>this.utils.$("chbId");
-    let chbMarca = <HTMLInputElement>this.utils.$("chbMarca");
-    let chbModelo = <HTMLInputElement>this.utils.$("chbModelo");
-    let chbPrecio = <HTMLInputElement>this.utils.$("chbPrecio");
+    let chbNombre = <HTMLInputElement>this.utils.$("chbNombre");
+    let chbApellido = <HTMLInputElement>this.utils.$("chbApellido");
+    let chbEdad = <HTMLInputElement>this.utils.$("chbEdad");
 
     while (trheader.lastChild) {
       trheader.removeChild(trheader.lastChild);
@@ -132,60 +135,50 @@ class Main implements EventListenerObject{
       th1.innerText = "Id";
       trheader.appendChild(th1);
     }
-    if(chbMarca.checked) {
+    if(chbNombre.checked) {
       let th2: HTMLTableDataCellElement = document.createElement("th");
-      th2.innerText = "Marca";
+      th2.innerText = "Nombre";
       trheader.appendChild(th2);
     }
-    if(chbModelo.checked) {
+    if(chbApellido.checked) {
       let th3: HTMLTableDataCellElement = document.createElement("th");
-      th3.innerText = "Modelo";
+      th3.innerText = "Apellido";
       trheader.appendChild(th3);
     }
-    if(chbPrecio.checked) {
+    if(chbEdad.checked) {
       let th4: HTMLTableDataCellElement = document.createElement("th");
-      th4.innerText = "Precio";
+      th4.innerText = "Edad";
       trheader.appendChild(th4);
     }
 
     let th5: HTMLTableDataCellElement = document.createElement("th");
-    th5.innerText = "Vehiculo";
+    th5.innerText = "Sexo";
     trheader.appendChild(th5);
 
     let th6: HTMLTableDataCellElement = document.createElement("th");
-    th6.innerText = "Caracteristica";
+    th6.innerText = "Accion";
     trheader.appendChild(th6);
 
-    let th7: HTMLTableDataCellElement = document.createElement("th");
-    th7.innerText = "Accion";
-    trheader.appendChild(th7);
+    for (let cliente of listaClientes) {
 
-    for (let vehiculo of listaVehiculos) {
+      id = cliente.id;
+      nombre = cliente.nombre;
+      apellido = cliente.apellido;
+      edad = cliente.edad;
 
-      id = vehiculo.id;
-      marca = vehiculo.marca;
-      modelo = vehiculo.modelo;
-      precio = vehiculo.precio;
-
-      if (vehiculo instanceof Auto) {
-          tipoVehiculo = "Auto";
-          caracteristica = vehiculo.cantidadPuertas + " puertas";
-
-      }else if (vehiculo instanceof Camioneta) {
-          tipoVehiculo = "Camioneta";
-          if (!vehiculo.cuatroXcuatro) {
-            caracteristica = "No es un 4x4";
-          }else {
-            caracteristica = "Es 4x4";
-          }
+      if(cliente.sexo == Sexo.Masculino) {
+        sexo = "Masculino";
       }
-
+      else {
+        sexo = "Femenino";
+      }
+      
       let btnEliminar = document.createElement('input');
       btnEliminar.type = 'button';
       btnEliminar.className = 'btnEliminar';
       btnEliminar.value = "Eliminar";            
       btnEliminar.onclick = () =>{
-        this.EliminarUnVehiculo(listaVehiculos.indexOf(vehiculo))
+        this.EliminarUno(listaClientes.indexOf(cliente))
       };
 
       let tr: HTMLTableRowElement = document.createElement("tr");
@@ -197,41 +190,36 @@ class Main implements EventListenerObject{
         td1.appendChild(tnId);
         tr.appendChild(td1);
       }
-      if(chbMarca.checked) {
+      if(chbNombre.checked) {
 
         let td2: HTMLTableDataCellElement = document.createElement("td");
-        let tnMarca = document.createTextNode(marca);
-        td2.appendChild(tnMarca);
+        let tnNombre = document.createTextNode(nombre);
+        td2.appendChild(tnNombre);
         tr.appendChild(td2);        
       }
-      if(chbModelo.checked) {
+      if(chbApellido.checked) {
 
         let td3: HTMLTableDataCellElement = document.createElement("td");
-        let tnModelo = document.createTextNode(modelo);
-        td3.appendChild(tnModelo);
+        let tnApellido = document.createTextNode(apellido);
+        td3.appendChild(tnApellido);
         tr.appendChild(td3);
       }
-      if(chbPrecio.checked) {
+      if(chbEdad.checked) {
 
         let td4: HTMLTableDataCellElement = document.createElement("td");
-        let tnPrecio = document.createTextNode(precio);
-        td4.appendChild(tnPrecio);
+        let tnEdad = document.createTextNode(edad);
+        td4.appendChild(tnEdad);
         tr.appendChild(td4);
       }
 
       let td5: HTMLTableDataCellElement = document.createElement("td");
-      let tnTipo = document.createTextNode(tipoVehiculo);
-      td5.appendChild(tnTipo);
+      let tnSexo = document.createTextNode(sexo);
+      td5.appendChild(tnSexo);
       tr.appendChild(td5);
 
       let td6: HTMLTableDataCellElement = document.createElement("td");
-      let tnCaracteristica = document.createTextNode(caracteristica);
-      td6.appendChild(tnCaracteristica);
+      td6.appendChild(btnEliminar);
       tr.appendChild(td6);
-
-      let td7: HTMLTableDataCellElement = document.createElement("td");
-      td7.appendChild(btnEliminar);
-      tr.appendChild(td7);
 
       tbody.appendChild(tr);      
     }
@@ -240,15 +228,15 @@ class Main implements EventListenerObject{
   public displayForm(display:boolean) :void {
       if(display){
         (<HTMLInputElement>this.utils.$("formContainer")).hidden = false;
-        this.HabilitarOpcionesPorTipo();
+        //this.HabilitarOpcionesPorSexo();
       }else{
         (<HTMLInputElement>this.utils.$("formContainer")).hidden = true;
       }
   }
-
-  public HabilitarOpcionesPorTipo() :void {
+/*
+  public HabilitarOpcionesPorSexo() :void {
     let tipo: string = (<HTMLInputElement>this.utils.$("tipoDeVehiculo")).value;
-    if (tipo == "Auto") {
+    if (tipo == "Cliente") {
       (<HTMLInputElement>this.utils.$("esAuto")).hidden = false;
       (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = true;
     }else {
@@ -256,32 +244,32 @@ class Main implements EventListenerObject{
       (<HTMLInputElement>this.utils.$("esAuto")).hidden = true;
     }
   }
-
-  public FiltrarPorTipo() :void {
+*/
+  public FiltrarPorSexo() :void {
     let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
 
-    if (tipo == 'Auto') {
-        let listaFiltrada = this.listaVehiculos.filter(vehiculo => vehiculo instanceof Auto);
+    if (tipo == 'Masculino') {
+        let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Masculino);
         this.AgregarATabla(listaFiltrada);
-    } else if (tipo == 'Camioneta') {   
-        var listaFiltrada = this.listaVehiculos.filter(vehiculo => vehiculo instanceof Camioneta);
+    } else if (tipo == 'Femenino') {   
+        var listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Femenino);
         this.AgregarATabla(listaFiltrada);
     } else {
-      var listaFiltrada = this.listaVehiculos;
+      var listaFiltrada = this.listaClientes;
       this.AgregarATabla(listaFiltrada);
     }
   }
 
   public CalcularPromedio() :void {
-    let arrayPrecios = new Array();
+    let arrayEdades = new Array();
     let inputPromedio = <HTMLInputElement>this.utils.$("promedio");
 
-    for (let vehiculo of this.listaVehiculos){
-        arrayPrecios.push(vehiculo.precio);
+    for (let persona of this.listaClientes){
+      arrayEdades.push(persona.edad);
     }
 
-    if(arrayPrecios.length !== 0){
-      let array = arrayPrecios,
+    if(arrayEdades.length !== 0){
+      let array = arrayEdades,
       average = array.reduce(function (sum, value) {
           return sum + value;
       }, 0) / array.length;
@@ -291,7 +279,6 @@ class Main implements EventListenerObject{
       let average = 0;
       inputPromedio.value = average.toString();
     }
-    
   }
 
 }
@@ -301,29 +288,31 @@ window.addEventListener("load", (event) => {
 
     let handler = new Main();
     let btnAlta = <HTMLElement>handler.utils.$("btnAlta");
+    let btnLimpiar = <HTMLElement>handler.utils.$("btnLimpiar");
     let btnCerrar = <HTMLElement>handler.utils.$("btnCerrar");
     let btnCerrar2 = <HTMLElement>handler.utils.$("btnCerrar2");
     let btnAgregar = <HTMLElement>handler.utils.$("btnAgregar");
-    let tipoVeh = <HTMLElement>handler.utils.$("tipoDeVehiculo");
+    //let tipoVeh = <HTMLElement>handler.utils.$("tipoDeVehiculo");
     let aplicaFiltro = <HTMLElement>handler.utils.$("aplicaFiltro");
     let btnPromedio = <HTMLElement>handler.utils.$("btnPromedio");
     let chbId = <HTMLElement>handler.utils.$("chbId");
-    let chbMarca = <HTMLElement>handler.utils.$("chbMarca");
-    let chbModelo = <HTMLElement>handler.utils.$("chbModelo");
-    let chbPrecio = <HTMLElement>handler.utils.$("chbPrecio");
+    let chbNombre = <HTMLElement>handler.utils.$("chbNombre");
+    let chbApellido = <HTMLElement>handler.utils.$("chbApellido");
+    let chbEdad = <HTMLElement>handler.utils.$("chbEdad");
 
 
-    btnPromedio.addEventListener("click", (event) => handler.handleEvent(event));
-    aplicaFiltro.addEventListener("change", (event) => handler.handleEvent(event));
-    tipoVeh.addEventListener("change", (event) => handler.handleEvent(event));
     btnAlta.addEventListener("click", (event) => handler.handleEvent(event));
+    btnLimpiar.addEventListener("click", (event) => handler.handleEvent(event));
     btnCerrar.addEventListener("click", (event) => handler.handleEvent(event));
     btnCerrar2.addEventListener("click", (event) => handler.handleEvent(event));
     btnAgregar.addEventListener("click", (event) => handler.handleEvent(event));
+    //tipoVeh.addEventListener("change", (event) => handler.handleEvent(event));
+    aplicaFiltro.addEventListener("change", (event) => handler.handleEvent(event));
+    btnPromedio.addEventListener("click", (event) => handler.handleEvent(event));
     chbId.addEventListener("change", (event) => handler.handleEvent(event));
-    chbMarca.addEventListener("change", (event) => handler.handleEvent(event));
-    chbModelo.addEventListener("change", (event) => handler.handleEvent(event));
-    chbPrecio.addEventListener("change", (event) => handler.handleEvent(event));
+    chbNombre.addEventListener("change", (event) => handler.handleEvent(event));
+    chbApellido.addEventListener("change", (event) => handler.handleEvent(event));
+    chbEdad.addEventListener("change", (event) => handler.handleEvent(event));
 
   });
   

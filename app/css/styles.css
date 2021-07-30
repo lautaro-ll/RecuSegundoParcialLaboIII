@@ -1,5 +1,5 @@
 body {
-    background: lightcyan;
+    background: paleturquoise;
 }
 
 .container {
@@ -91,6 +91,22 @@ input[type=text],
 
 .btnAlta:hover {
     background-color: steelblue;
+    color: whitesmoke;
+}
+
+.btnLimpiar {
+    width: auto;
+    padding: 10px 18px;
+    margin: 8px 0;
+    background-color: tomato;
+    color: whitesmoke;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+.btnLimpiar:hover {
+    background-color: indianred;
     color: whitesmoke;
 }
 

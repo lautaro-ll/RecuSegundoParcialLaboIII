@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="css/styles.css">
-    <script type="text/javascript" src="js/Vehiculo.js">
+    <script type="text/javascript" src="js/Persona.js">
     </script>
-    <script type="text/javascript" src="js/Auto.js">
-    </script>
-    <script type="text/javascript" src="js/Camioneta.js">
+    <script type="text/javascript" src="js/Cliente.js">
     </script>
     <script type="text/javascript" src="js/Utils.js">
     </script>
     <script type="text/javascript" src="js/main.js">
     </script>
-    <title>Gestión de Vehiculos</title>
+    <title>Gestión de Clientes</title>
 </head>
 
 <body>
     <div class="wrapper">
         <!-- ALTA-->
         <input type="button" class="btnAlta" id="btnAlta" value="Alta">
+        <input type="button" class="btnLimpiar" id="btnLimpiar" value="Limpiar LocalStorage">
         <!-- ALTA-->
         <br>
         <!-- FILTROS-->
         <h1>Filtros</h1>
 
-        <label for="tipoAuto">Filtrar por: </label>
-        <select name="tipoDeVehiculo" id="aplicaFiltro">
-            <option value="Auto">Auto</option>
-            <option value="Camioneta">Camioneta</option>            
+        <label for="filtro">Filtrar por: </label>
+        <select name="filtro" id="aplicaFiltro">
             <option value="Todos">Todos</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>            
         </select>
         <!-- FILTROS-->
         <!-- PROMEDIO -->
         <div class="promedios">
-            <label for="promedioDePrecios">Promedio de precio: </label>
+            <label for="promedio">Promedio de edad: </label>
             <input type="text" id="promedio" name="promedio" class="promedio">
             <input type="button" id="btnPromedio" class="btnPromedios" value="Calcular Promedio">
         </div>
@@ -42,60 +41,48 @@
         <h3>Campos mostrados: Tildar los campos a mostrar</h3>
         <input type="checkbox" name="checkbox" id="chbId" value="Id">
         <label for="chbId"> Id </label>
-        <input type="checkbox" name="checkbox" id="chbMarca" value="Marca">
-        <label for="chbMarca"> Marca </label>
-        <input type="checkbox" name="checkbox" id="chbModelo" value="Modelo">
-        <label for="chbModelo"> Modelo </label>
-        <input type="checkbox" name="checkbox" id="chbPrecio" value="Precio">
-        <label for="chbPrecio"> Precio </label>
+        <input type="checkbox" name="checkbox" id="chbNombre" value="Nombre">
+        <label for="chbNombre"> Nombre </label>
+        <input type="checkbox" name="checkbox" id="chbApellido" value="Apellido">
+        <label for="chbApellido"> Apellido </label>
+        <input type="checkbox" name="checkbox" id="chbEdad" value="Edad">
+        <label for="chbEdad"> Edad </label>
         <br>
     </div>
     <!-- COMIENZO DE FORMULARIO -->
     <div class="container" id="container">
         <div class="formContainer" id="formContainer" hidden>
             <input class="btnCerrar" type="button" id="btnCerrar" value="X">
-            <h1>Alta Vehículo</h1>
+            <h1>Alta Cliente</h1>
             <br>
-            <label for="Id">Id: </label>
-            <input type="text" id="id" name="nombre" placeholder="Id" disabled=true>
+            <label for="id">Id: </label>
+            <input type="text" id="inputId" name="id" placeholder="Id" disabled=true>
             <br>
-            <label for="marcaVehiculo">Marca: </label>
-            <input type="text" id="marcaVehiculo" name="nombre" placeholder="Marca">
+            <label for="nombre">Nombre: </label>
+            <input type="text" id="inputNombre" name="nombre" placeholder="Nombre">
             <br>
-            <label for="modeloVehiculo">Modelo: </label>
-            <input type="text" id="modeloVehiculo" name="nombre" placeholder="Modelo">
+            <label for="apellido">Apellido: </label>
+            <input type="text" id="inputApellido" name="apellido" placeholder="Apellido">
             <br>
-            <label for="precioVehiculo">Precio: </label>
-            <input type="number" id="precioVehiculo" name="nombre" placeholder="Precio">
+            <label for="edad">Edad: </label>
+            <input type="number" id="inputEdad" name="edad" placeholder="Edad">
             <br>
             <br>
-            <label for="vehiculos">Tipo: </label>
-            <select name="tiposVehiculo" id="tipoDeVehiculo">
-                <option value="Auto">Auto</option>
-                <option value="Camioneta">Camioneta</option>
+            <label for="sexo">Sexo: </label>
+            <select name="sexo" id="selectSexo">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
             </select>
             <br>
             <br>
-            <div id="esCamioneta" hidden>
-                <label for="tipo">Tipo Camioneta: </label>
-                <select name="tipoCamioneta" id="tipoCamioneta">
-                    <option value="4x4">4x4</option>
-                    <option value="No4x4">Otros</option>
-                </select>
-                <br>
-            </div>
-            <div id="esAuto" hidden>
-                <label for="tipo">Puertas: </label>
-                <input type="number" max="5" min="2" id="cantidadPuertas" name="puertas" placeholder="Cantidad de puertas">
-            </div>
             <input class="btnAgregar" type="button" id="btnAgregar" value="Agregar">
             <input type="button" id="btnCerrar2" value="Cerrar">
         </div>
     </div>
     <!-- FIN DE FORMULARIO -->
-    <!-- COMIENZO DE TABLE -->
+    <!-- COMIENZO DE TABLA -->
     <div class="wrapperTable">
-        <h1>Listado De Vehiculos</h1>
+        <h1>Listado De Clientes</h1>
         <table id="table">
             <thead>
                 <tr id="trhead">
@@ -113,7 +100,7 @@
             <tbody id="tbody">
             </tbody>
         </table>
-        <!-- FIN DE TABLE -->
+        <!-- FIN DE TABLA -->
     </div>
 </body>
 

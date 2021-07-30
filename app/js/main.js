@@ -1,7 +1,7 @@
 var Main = /** @class */ (function () {
     function Main() {
         this.localStorage = window.localStorage;
-        this.listaVehiculos = new Array();
+        this.listaClientes = new Array();
         this.utils = new Utils();
     }
     //MANEJADOR DE LOS EVENTOS
@@ -12,6 +12,9 @@ var Main = /** @class */ (function () {
             case "btnAlta":
                 this.displayForm(true);
                 break;
+            case "btnLimpiar":
+                this.LimpiarTabla();
+                break;
             case "btnCerrar":
                 this.displayForm(false);
                 break;
@@ -19,60 +22,54 @@ var Main = /** @class */ (function () {
                 this.displayForm(false);
                 break;
             case "btnAgregar":
-                this.AgregarVehiculo();
+                this.AgregarUno();
                 break;
+            /*
             case "tipoDeVehiculo":
-                this.HabilitarOpcionesPorTipo();
-                break;
+              this.HabilitarOpcionesPorSexo();
+              break;
+              */
             case "aplicaFiltro":
-                this.FiltrarPorTipo();
+                this.FiltrarPorSexo();
                 break;
             case "btnPromedio":
                 this.CalcularPromedio();
                 break;
             case "chbId":
-                this.AgregarATabla(this.listaVehiculos);
+                this.AgregarATabla(this.listaClientes);
                 break;
-            case "chbMarca":
-                this.AgregarATabla(this.listaVehiculos);
+            case "chbNombre":
+                this.AgregarATabla(this.listaClientes);
                 break;
-            case "chbModelo":
-                this.AgregarATabla(this.listaVehiculos);
+            case "chbApellido":
+                this.AgregarATabla(this.listaClientes);
                 break;
-            case "chbPrecio":
-                this.AgregarATabla(this.listaVehiculos);
+            case "chbEdad":
+                this.AgregarATabla(this.listaClientes);
                 break;
             default:
                 break;
         }
     };
-    Main.prototype.PushearVehiculo = function (id) {
-        var marca = document.getElementById("marcaVehiculo").value;
-        var modelo = document.getElementById("modeloVehiculo").value;
-        var precio = document.getElementById("precioVehiculo").value;
-        var tipoVehiculo = document.getElementById("tipoDeVehiculo").value;
-        var tipoCamioneta = document.getElementById("tipoCamioneta").value;
-        var cantPuertas = document.getElementById("cantidadPuertas").value;
-        if (tipoVehiculo === "Auto") {
-            var auto = new Auto(id, marca, modelo, parseInt(precio), parseInt(cantPuertas));
-            this.listaVehiculos.push(auto);
+    Main.prototype.PushearUno = function (id) {
+        var nombre = document.getElementById("inputNombre").value;
+        var apellido = document.getElementById("inputApellido").value;
+        var edad = document.getElementById("inputEdad").value;
+        var sexo = document.getElementById("selectSexo").value;
+        if (sexo == "Masculino") {
+            var cliente = new Cliente(id, nombre, apellido, parseInt(edad), Sexo.Masculino);
+            this.listaClientes.push(cliente);
         }
-        else if (tipoVehiculo === "Camioneta") {
-            if (tipoCamioneta == "4X4") {
-                var camioneta = new Camioneta(id, marca, modelo, parseInt(precio), true);
-                this.listaVehiculos.push(camioneta);
-            }
-            else {
-                var camioneta = new Camioneta(id, marca, modelo, parseInt(precio), false);
-                this.listaVehiculos.push(camioneta);
-            }
+        else {
+            var cliente = new Cliente(id, nombre, apellido, parseInt(edad), Sexo.Femenino);
+            this.listaClientes.push(cliente);
         }
     };
-    Main.prototype.AgregarVehiculo = function () {
+    Main.prototype.AgregarUno = function () {
         var id = 1;
-        if (this.listaVehiculos.length != 0) {
-            var vehiculos = this.listaVehiculos;
-            id = vehiculos.reduce(function (last, i) {
+        if (this.listaClientes.length != 0) {
+            var cliente = this.listaClientes;
+            id = cliente.reduce(function (last, i) {
                 if (i.id >= last) {
                     return i.id + 1;
                 }
@@ -82,87 +79,81 @@ var Main = /** @class */ (function () {
                 id + 1;
             }
         }
-        this.PushearVehiculo(id);
-        this.AgregarATabla(this.listaVehiculos);
+        this.PushearUno(id);
+        this.AgregarATabla(this.listaClientes);
         this.displayForm(false);
     };
-    Main.prototype.EliminarUnVehiculo = function (id) {
-        this.listaVehiculos.splice(id, 1);
-        this.AgregarATabla(this.listaVehiculos);
+    Main.prototype.EliminarUno = function (id) {
+        this.listaClientes.splice(id, 1);
+        this.AgregarATabla(this.listaClientes);
     };
-    Main.prototype.AgregarATabla = function (listaVehiculos) {
-        var _this = this;
-        var marca = '';
-        var modelo = '';
-        var precio;
-        var id;
-        var caracteristica;
-        var tipoVehiculo = '';
+    Main.prototype.LimpiarTabla = function () {
         var tbody = this.utils.$("tbody");
         var trheader = this.utils.$("trhead");
-        var chbId = this.utils.$("chbId");
-        var chbMarca = this.utils.$("chbMarca");
-        var chbModelo = this.utils.$("chbModelo");
-        var chbPrecio = this.utils.$("chbPrecio");
         while (trheader.lastChild) {
             trheader.removeChild(trheader.lastChild);
         }
         while (tbody.lastChild) {
             tbody.removeChild(tbody.lastChild);
         }
+    };
+    Main.prototype.AgregarATabla = function (listaClientes) {
+        var _this = this;
+        var nombre = '';
+        var apellido = '';
+        var edad;
+        var id;
+        var sexo = '';
+        var tbody = this.utils.$("tbody");
+        var trheader = this.utils.$("trhead");
+        var chbId = this.utils.$("chbId");
+        var chbNombre = this.utils.$("chbNombre");
+        var chbApellido = this.utils.$("chbApellido");
+        var chbEdad = this.utils.$("chbEdad");
+        this.LimpiarTabla();
         if (chbId.checked) {
             var th1 = document.createElement("th");
             th1.innerText = "Id";
             trheader.appendChild(th1);
         }
-        if (chbMarca.checked) {
+        if (chbNombre.checked) {
             var th2 = document.createElement("th");
-            th2.innerText = "Marca";
+            th2.innerText = "Nombre";
             trheader.appendChild(th2);
         }
-        if (chbModelo.checked) {
+        if (chbApellido.checked) {
             var th3 = document.createElement("th");
-            th3.innerText = "Modelo";
+            th3.innerText = "Apellido";
             trheader.appendChild(th3);
         }
-        if (chbPrecio.checked) {
+        if (chbEdad.checked) {
             var th4 = document.createElement("th");
-            th4.innerText = "Precio";
+            th4.innerText = "Edad";
             trheader.appendChild(th4);
         }
         var th5 = document.createElement("th");
-        th5.innerText = "Vehiculo";
+        th5.innerText = "Sexo";
         trheader.appendChild(th5);
         var th6 = document.createElement("th");
-        th6.innerText = "Caracteristica";
+        th6.innerText = "Accion";
         trheader.appendChild(th6);
-        var th7 = document.createElement("th");
-        th7.innerText = "Accion";
-        trheader.appendChild(th7);
-        var _loop_1 = function (vehiculo) {
-            id = vehiculo.id;
-            marca = vehiculo.marca;
-            modelo = vehiculo.modelo;
-            precio = vehiculo.precio;
-            if (vehiculo instanceof Auto) {
-                tipoVehiculo = "Auto";
-                caracteristica = vehiculo.cantidadPuertas + " puertas";
+        var _loop_1 = function (cliente) {
+            id = cliente.id;
+            nombre = cliente.nombre;
+            apellido = cliente.apellido;
+            edad = cliente.edad;
+            if (cliente.sexo == Sexo.Masculino) {
+                sexo = "Masculino";
             }
-            else if (vehiculo instanceof Camioneta) {
-                tipoVehiculo = "Camioneta";
-                if (!vehiculo.cuatroXcuatro) {
-                    caracteristica = "No es un 4x4";
-                }
-                else {
-                    caracteristica = "Es 4x4";
-                }
+            else {
+                sexo = "Femenino";
             }
             var btnEliminar = document.createElement('input');
             btnEliminar.type = 'button';
             btnEliminar.className = 'btnEliminar';
             btnEliminar.value = "Eliminar";
             btnEliminar.onclick = function () {
-                _this.EliminarUnVehiculo(listaVehiculos.indexOf(vehiculo));
+                _this.EliminarUno(listaClientes.indexOf(cliente));
             };
             var tr = document.createElement("tr");
             if (chbId.checked) {
@@ -171,86 +162,83 @@ var Main = /** @class */ (function () {
                 td1.appendChild(tnId);
                 tr.appendChild(td1);
             }
-            if (chbMarca.checked) {
+            if (chbNombre.checked) {
                 var td2 = document.createElement("td");
-                var tnMarca = document.createTextNode(marca);
-                td2.appendChild(tnMarca);
+                var tnNombre = document.createTextNode(nombre);
+                td2.appendChild(tnNombre);
                 tr.appendChild(td2);
             }
-            if (chbModelo.checked) {
+            if (chbApellido.checked) {
                 var td3 = document.createElement("td");
-                var tnModelo = document.createTextNode(modelo);
-                td3.appendChild(tnModelo);
+                var tnApellido = document.createTextNode(apellido);
+                td3.appendChild(tnApellido);
                 tr.appendChild(td3);
             }
-            if (chbPrecio.checked) {
+            if (chbEdad.checked) {
                 var td4 = document.createElement("td");
-                var tnPrecio = document.createTextNode(precio);
-                td4.appendChild(tnPrecio);
+                var tnEdad = document.createTextNode(edad);
+                td4.appendChild(tnEdad);
                 tr.appendChild(td4);
             }
             var td5 = document.createElement("td");
-            var tnTipo = document.createTextNode(tipoVehiculo);
-            td5.appendChild(tnTipo);
+            var tnSexo = document.createTextNode(sexo);
+            td5.appendChild(tnSexo);
             tr.appendChild(td5);
             var td6 = document.createElement("td");
-            var tnCaracteristica = document.createTextNode(caracteristica);
-            td6.appendChild(tnCaracteristica);
+            td6.appendChild(btnEliminar);
             tr.appendChild(td6);
-            var td7 = document.createElement("td");
-            td7.appendChild(btnEliminar);
-            tr.appendChild(td7);
             tbody.appendChild(tr);
         };
-        for (var _i = 0, listaVehiculos_1 = listaVehiculos; _i < listaVehiculos_1.length; _i++) {
-            var vehiculo = listaVehiculos_1[_i];
-            _loop_1(vehiculo);
+        for (var _i = 0, listaClientes_1 = listaClientes; _i < listaClientes_1.length; _i++) {
+            var cliente = listaClientes_1[_i];
+            _loop_1(cliente);
         }
     };
     Main.prototype.displayForm = function (display) {
         if (display) {
             this.utils.$("formContainer").hidden = false;
-            this.HabilitarOpcionesPorTipo();
+            //this.HabilitarOpcionesPorSexo();
         }
         else {
             this.utils.$("formContainer").hidden = true;
         }
     };
-    Main.prototype.HabilitarOpcionesPorTipo = function () {
-        var tipo = this.utils.$("tipoDeVehiculo").value;
-        if (tipo == "Auto") {
-            this.utils.$("esAuto").hidden = false;
-            this.utils.$("esCamioneta").hidden = true;
+    /*
+      public HabilitarOpcionesPorSexo() :void {
+        let tipo: string = (<HTMLInputElement>this.utils.$("tipoDeVehiculo")).value;
+        if (tipo == "Cliente") {
+          (<HTMLInputElement>this.utils.$("esAuto")).hidden = false;
+          (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = true;
+        }else {
+          (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = false;
+          (<HTMLInputElement>this.utils.$("esAuto")).hidden = true;
         }
-        else {
-            this.utils.$("esCamioneta").hidden = false;
-            this.utils.$("esAuto").hidden = true;
-        }
-    };
-    Main.prototype.FiltrarPorTipo = function () {
+      }
+    */
+    Main.prototype.FiltrarPorSexo = function () {
         var tipo = this.utils.$("aplicaFiltro").value;
-        if (tipo == 'Auto') {
-            var listaFiltrada_1 = this.listaVehiculos.filter(function (vehiculo) { return vehiculo instanceof Auto; });
+        if (tipo == 'Masculino') {
+            var listaFiltrada_1 = this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Masculino; });
             this.AgregarATabla(listaFiltrada_1);
         }
-        else if (tipo == 'Camioneta') {
-            var listaFiltrada = this.listaVehiculos.filter(function (vehiculo) { return vehiculo instanceof Camioneta; });
+        else if (tipo == 'Femenino') {
+            var listaFiltrada = this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Femenino; });
             this.AgregarATabla(listaFiltrada);
         }
         else {
-            var listaFiltrada = this.listaVehiculos;
+            var listaFiltrada = this.listaClientes;
             this.AgregarATabla(listaFiltrada);
         }
     };
     Main.prototype.CalcularPromedio = function () {
-        var arrayPrecios = new Array();
+        var arrayEdades = new Array();
         var inputPromedio = this.utils.$("promedio");
-        for (var _i = 0, _a = this.listaVehiculos; _i < _a.length; _i++) {
-            var vehiculo = _a[_i];
-            arrayPrecios.push(vehiculo.precio);
+        for (var _i = 0, _a = this.listaClientes; _i < _a.length; _i++) {
+            var persona = _a[_i];
+            arrayEdades.push(persona.edad);
         }
-        if (arrayPrecios.length !== 0) {
-            var array = arrayPrecios, average = array.reduce(function (sum, value) {
+        if (arrayEdades.length !== 0) {
+            var array = arrayEdades, average = array.reduce(function (sum, value) {
                 return sum + value;
             }, 0) / array.length;
             inputPromedio.value = average.toString();
@@ -266,25 +254,27 @@ window.addEventListener("load", function (event) {
     event.preventDefault();
     var handler = new Main();
     var btnAlta = handler.utils.$("btnAlta");
+    var btnLimpiar = handler.utils.$("btnLimpiar");
     var btnCerrar = handler.utils.$("btnCerrar");
     var btnCerrar2 = handler.utils.$("btnCerrar2");
     var btnAgregar = handler.utils.$("btnAgregar");
-    var tipoVeh = handler.utils.$("tipoDeVehiculo");
+    //let tipoVeh = <HTMLElement>handler.utils.$("tipoDeVehiculo");
     var aplicaFiltro = handler.utils.$("aplicaFiltro");
     var btnPromedio = handler.utils.$("btnPromedio");
     var chbId = handler.utils.$("chbId");
-    var chbMarca = handler.utils.$("chbMarca");
-    var chbModelo = handler.utils.$("chbModelo");
-    var chbPrecio = handler.utils.$("chbPrecio");
-    btnPromedio.addEventListener("click", function (event) { return handler.handleEvent(event); });
-    aplicaFiltro.addEventListener("change", function (event) { return handler.handleEvent(event); });
-    tipoVeh.addEventListener("change", function (event) { return handler.handleEvent(event); });
+    var chbNombre = handler.utils.$("chbNombre");
+    var chbApellido = handler.utils.$("chbApellido");
+    var chbEdad = handler.utils.$("chbEdad");
     btnAlta.addEventListener("click", function (event) { return handler.handleEvent(event); });
+    btnLimpiar.addEventListener("click", function (event) { return handler.handleEvent(event); });
     btnCerrar.addEventListener("click", function (event) { return handler.handleEvent(event); });
     btnCerrar2.addEventListener("click", function (event) { return handler.handleEvent(event); });
     btnAgregar.addEventListener("click", function (event) { return handler.handleEvent(event); });
+    //tipoVeh.addEventListener("change", (event) => handler.handleEvent(event));
+    aplicaFiltro.addEventListener("change", function (event) { return handler.handleEvent(event); });
+    btnPromedio.addEventListener("click", function (event) { return handler.handleEvent(event); });
     chbId.addEventListener("change", function (event) { return handler.handleEvent(event); });
-    chbMarca.addEventListener("change", function (event) { return handler.handleEvent(event); });
-    chbModelo.addEventListener("change", function (event) { return handler.handleEvent(event); });
-    chbPrecio.addEventListener("change", function (event) { return handler.handleEvent(event); });
+    chbNombre.addEventListener("change", function (event) { return handler.handleEvent(event); });
+    chbApellido.addEventListener("change", function (event) { return handler.handleEvent(event); });
+    chbEdad.addEventListener("change", function (event) { return handler.handleEvent(event); });
 });

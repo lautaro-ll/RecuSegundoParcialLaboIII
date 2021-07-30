@@ -13,12 +13,18 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Auto = /** @class */ (function (_super) {
-    __extends(Auto, _super);
-    function Auto(id, marca, modelo, precio, cantidadPuertas) {
-        var _this = _super.call(this, id, marca, modelo, precio) || this;
-        _this.cantidadPuertas = cantidadPuertas;
+var Sexo;
+(function (Sexo) {
+    Sexo[Sexo["Masculino"] = 0] = "Masculino";
+    Sexo[Sexo["Femenino"] = 1] = "Femenino";
+})(Sexo || (Sexo = {}));
+var Cliente = /** @class */ (function (_super) {
+    __extends(Cliente, _super);
+    function Cliente(id, nombre, apellido, edad, sexo) {
+        var _this = _super.call(this, id, nombre, apellido) || this;
+        _this.edad = edad;
+        _this.sexo = sexo;
         return _this;
     }
-    return Auto;
-}(Vehiculo));
+    return Cliente;
+}(Persona));
