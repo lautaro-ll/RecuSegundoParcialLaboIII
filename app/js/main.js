@@ -211,20 +211,57 @@ var Main = /** @class */ (function () {
             this.utils.$("formContainer").hidden = true;
         }
     };
-    Main.prototype.FiltrarPorSexo = function () {
-        var tipo = this.utils.$("aplicaFiltro").value;
+    /*
+      public FiltrarPorSexo() :void {
+        let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
+    
         if (tipo == 'Masculino') {
-            var listaFiltrada_1 = this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Masculino; });
-            this.AgregarATabla(listaFiltrada_1);
-        }
-        else if (tipo == 'Femenino') {
-            var listaFiltrada = this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Femenino; });
+            let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Masculino);
             this.AgregarATabla(listaFiltrada);
-        }
-        else {
-            var listaFiltrada = this.listaClientes;
+        } else if (tipo == 'Femenino') {
+            var listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Femenino);
             this.AgregarATabla(listaFiltrada);
+        } else {
+          var listaFiltrada = this.listaClientes;
+          this.AgregarATabla(listaFiltrada);
         }
+      }
+    */
+    Main.prototype.FiltrarPorSexo = function () {
+        var _this = this;
+        var tipo = this.utils.$("aplicaFiltro").value;
+        var promesa = new Promise(function (resolve, reject) {
+            if (tipo != 'Todos') {
+                resolve();
+            }
+            else {
+                reject();
+            }
+        });
+        promesa.then(function () {
+            if (tipo == 'Masculino') {
+                var listaFiltrada = _this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Masculino; });
+                _this.AgregarATabla(listaFiltrada);
+            }
+            else if (tipo == 'Femenino') {
+                var listaFiltrada = _this.listaClientes.filter(function (cliente) { return cliente.sexo == Sexo.Femenino; });
+                _this.AgregarATabla(listaFiltrada);
+            }
+        })["catch"](function () {
+            var listaFiltrada = _this.listaClientes;
+            _this.AgregarATabla(listaFiltrada);
+        });
+        /*
+            if (tipo == 'Masculino') {
+                let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Masculino);
+                this.AgregarATabla(listaFiltrada);
+            } else if (tipo == 'Femenino') {
+                var listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Femenino);
+                this.AgregarATabla(listaFiltrada);
+            } else {
+              var listaFiltrada = this.listaClientes;
+              this.AgregarATabla(listaFiltrada);
+            }*/
     };
     Main.prototype.CalcularPromedio = function () {
         var arrayEdades = new Array();

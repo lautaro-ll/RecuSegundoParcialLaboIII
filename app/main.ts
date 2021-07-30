@@ -244,7 +244,7 @@ class Main implements EventListenerObject{
         (<HTMLInputElement>this.utils.$("formContainer")).hidden = true;
       }
   }
-
+/* Version sin promesa
   public FiltrarPorSexo() :void {
     let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
 
@@ -259,13 +259,38 @@ class Main implements EventListenerObject{
       this.AgregarATabla(listaFiltrada);
     }
   }
+*/
+  public FiltrarPorSexo() :void {
+    let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
 
+    let promesa = new Promise((resolve:any, reject:any) => {
+      if (tipo != 'Todos') {
+        resolve() 
+      } else {
+        reject ()
+      }}
+      );
+    
+      promesa.then(() => {
+        if (tipo == 'Masculino') {
+          let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Masculino);
+          this.AgregarATabla(listaFiltrada);
+        } else if (tipo == 'Femenino') {
+          let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Femenino);
+          this.AgregarATabla(listaFiltrada);
+          }
+      }).catch(() => {
+        var listaFiltrada = this.listaClientes;
+        this.AgregarATabla(listaFiltrada);
+      });
+  }
+/* version sin promesa
   public CalcularPromedio() :void {
     let arrayEdades = new Array();
     let inputPromedio = <HTMLInputElement>this.utils.$("promedio");
 
-    for (let persona of this.listaClientes){
-      arrayEdades.push(persona.edad);
+    for (let cliente of this.listaClientes){
+      arrayEdades.push(cliente.edad);
     }
 
     if(arrayEdades.length !== 0){
@@ -280,7 +305,27 @@ class Main implements EventListenerObject{
       inputPromedio.value = average.toString();
     }
   }
+*/
+public CalcularPromedio() :void {
+  let arrayEdades = new Array();
+  let inputPromedio = <HTMLInputElement>this.utils.$("promedio");
 
+  for (let cliente of this.listaClientes){
+    arrayEdades.push(cliente.edad);
+  }
+
+  if(arrayEdades.length !== 0){
+    let array = arrayEdades,
+    average = array.reduce(function (sum, value) {
+        return sum + value;
+    }, 0) / array.length;
+    inputPromedio.value = average.toString();
+
+  } else{
+    let average = 0;
+    inputPromedio.value = average.toString();
+  }
+}
 }
 
 window.addEventListener("load", (event) => {
