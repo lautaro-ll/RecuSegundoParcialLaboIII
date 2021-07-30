@@ -96,7 +96,19 @@ var Main = /** @class */ (function () {
         this.displayForm(true);
     };
     Main.prototype.LimpiarLocalStorage = function () {
-        localStorage.clear();
+        this.localStorage.clear();
+        this.listaClientes = new Array();
+        this.LimpiarTabla();
+    };
+    Main.prototype.LimpiarTabla = function () {
+        var tbody = this.utils.$("tbody");
+        var trheader = this.utils.$("trhead");
+        while (trheader.lastChild) {
+            trheader.removeChild(trheader.lastChild);
+        }
+        while (tbody.lastChild) {
+            tbody.removeChild(tbody.lastChild);
+        }
     };
     Main.prototype.AgregarATabla = function (listaClientes) {
         var _this = this;
@@ -111,12 +123,7 @@ var Main = /** @class */ (function () {
         var chbNombre = this.utils.$("chbNombre");
         var chbApellido = this.utils.$("chbApellido");
         var chbEdad = this.utils.$("chbEdad");
-        while (trheader.lastChild) {
-            trheader.removeChild(trheader.lastChild);
-        }
-        while (tbody.lastChild) {
-            tbody.removeChild(tbody.lastChild);
-        }
+        this.LimpiarTabla();
         if (chbId.checked) {
             var th1 = document.createElement("th");
             th1.innerText = "Id";

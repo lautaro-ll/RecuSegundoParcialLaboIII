@@ -114,9 +114,22 @@ class Main implements EventListenerObject{
   
   public LimpiarLocalStorage() {
 
-    localStorage.clear();
+    this.localStorage.clear();
+    this.listaClientes = new Array<Cliente>();
+    this.LimpiarTabla();
   }
 
+  public LimpiarTabla () {
+    var tbody: HTMLTableElement = <HTMLTableElement>this.utils.$("tbody");
+    var trheader: HTMLTableElement = <HTMLTableElement>this.utils.$("trhead");
+
+    while (trheader.lastChild) {
+      trheader.removeChild(trheader.lastChild);
+    }
+    while (tbody.lastChild) {
+      tbody.removeChild(tbody.lastChild);
+    }
+  }
   public AgregarATabla(listaClientes: Array<Cliente>) :void {
 
     var nombre: string = '';
@@ -132,12 +145,7 @@ class Main implements EventListenerObject{
     let chbApellido = <HTMLInputElement>this.utils.$("chbApellido");
     let chbEdad = <HTMLInputElement>this.utils.$("chbEdad");
 
-    while (trheader.lastChild) {
-      trheader.removeChild(trheader.lastChild);
-    }
-    while (tbody.lastChild) {
-      tbody.removeChild(tbody.lastChild);
-    }
+    this.LimpiarTabla();
 
     if(chbId.checked) {
       let th1: HTMLTableDataCellElement = document.createElement("th");
