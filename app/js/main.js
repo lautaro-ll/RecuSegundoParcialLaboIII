@@ -211,7 +211,7 @@ var Main = /** @class */ (function () {
             this.utils.$("formContainer").hidden = true;
         }
     };
-    /*
+    /* Version sin promesa
       public FiltrarPorSexo() :void {
         let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
     
@@ -251,35 +251,53 @@ var Main = /** @class */ (function () {
             var listaFiltrada = _this.listaClientes;
             _this.AgregarATabla(listaFiltrada);
         });
-        /*
-            if (tipo == 'Masculino') {
-                let listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Masculino);
-                this.AgregarATabla(listaFiltrada);
-            } else if (tipo == 'Femenino') {
-                var listaFiltrada = this.listaClientes.filter(cliente => cliente.sexo == Sexo.Femenino);
-                this.AgregarATabla(listaFiltrada);
-            } else {
-              var listaFiltrada = this.listaClientes;
-              this.AgregarATabla(listaFiltrada);
-            }*/
     };
+    /* version sin promesa
+      public CalcularPromedio() :void {
+        let arrayEdades = new Array();
+        let inputPromedio = <HTMLInputElement>this.utils.$("promedio");
+    
+        for (let cliente of this.listaClientes){
+          arrayEdades.push(cliente.edad);
+        }
+    
+        if(arrayEdades.length !== 0){
+          let array = arrayEdades,
+          average = array.reduce(function (sum, value) {
+              return sum + value;
+          }, 0) / array.length;
+          inputPromedio.value = average.toString();
+    
+        } else{
+          let average = 0;
+          inputPromedio.value = average.toString();
+        }
+      }
+    */
     Main.prototype.CalcularPromedio = function () {
         var arrayEdades = new Array();
         var inputPromedio = this.utils.$("promedio");
         for (var _i = 0, _a = this.listaClientes; _i < _a.length; _i++) {
-            var persona = _a[_i];
-            arrayEdades.push(persona.edad);
+            var cliente = _a[_i];
+            arrayEdades.push(cliente.edad);
         }
-        if (arrayEdades.length !== 0) {
+        var promesa = new Promise(function (resolve, reject) {
+            if (arrayEdades.length !== 0) {
+                resolve();
+            }
+            else {
+                reject();
+            }
+        });
+        promesa.then(function () {
             var array = arrayEdades, average = array.reduce(function (sum, value) {
                 return sum + value;
             }, 0) / array.length;
             inputPromedio.value = average.toString();
-        }
-        else {
+        })["catch"](function () {
             var average = 0;
             inputPromedio.value = average.toString();
-        }
+        });
     };
     return Main;
 }());

@@ -264,12 +264,9 @@ class Main implements EventListenerObject{
     let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
 
     let promesa = new Promise((resolve:any, reject:any) => {
-      if (tipo != 'Todos') {
-        resolve() 
-      } else {
-        reject ()
-      }}
-      );
+      if (tipo != 'Todos') { resolve() } 
+      else { reject () }
+    });
     
       promesa.then(() => {
         if (tipo == 'Masculino') {
@@ -314,17 +311,21 @@ public CalcularPromedio() :void {
     arrayEdades.push(cliente.edad);
   }
 
-  if(arrayEdades.length !== 0){
+  let promesa = new Promise((resolve:any, reject:any) => {
+    if (arrayEdades.length !== 0) { resolve() }
+    else { reject () }
+  });
+
+  promesa.then(() => {
     let array = arrayEdades,
     average = array.reduce(function (sum, value) {
         return sum + value;
     }, 0) / array.length;
     inputPromedio.value = average.toString();
-
-  } else{
+  }).catch(() => {
     let average = 0;
     inputPromedio.value = average.toString();
-  }
+  })
 }
 }
 
