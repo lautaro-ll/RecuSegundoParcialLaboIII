@@ -13,7 +13,7 @@ var Main = /** @class */ (function () {
                 this.displayForm(true);
                 break;
             case "btnLimpiar":
-                this.LimpiarTabla();
+                this.LimpiarLocalStorage();
                 break;
             case "btnCerrar":
                 this.displayForm(false);
@@ -24,11 +24,6 @@ var Main = /** @class */ (function () {
             case "btnAgregar":
                 this.AgregarUno();
                 break;
-            /*
-            case "tipoDeVehiculo":
-              this.HabilitarOpcionesPorSexo();
-              break;
-              */
             case "aplicaFiltro":
                 this.FiltrarPorSexo();
                 break;
@@ -87,15 +82,21 @@ var Main = /** @class */ (function () {
         this.listaClientes.splice(id, 1);
         this.AgregarATabla(this.listaClientes);
     };
-    Main.prototype.LimpiarTabla = function () {
-        var tbody = this.utils.$("tbody");
-        var trheader = this.utils.$("trhead");
-        while (trheader.lastChild) {
-            trheader.removeChild(trheader.lastChild);
+    Main.prototype.CargarForm = function (id) {
+        this.listaClientes[id];
+        document.getElementById("inputNombre").value = this.listaClientes[id].nombre;
+        document.getElementById("inputApellido").value = this.listaClientes[id].apellido;
+        document.getElementById("inputEdad").value = String(this.listaClientes[id].edad);
+        if (this.listaClientes[id].sexo == Sexo.Masculino) {
+            document.getElementById("selectSexo").value = "Masculino";
         }
-        while (tbody.lastChild) {
-            tbody.removeChild(tbody.lastChild);
+        else {
+            document.getElementById("selectSexo").value = "Femenino";
         }
+        this.displayForm(true);
+    };
+    Main.prototype.LimpiarLocalStorage = function () {
+        localStorage.clear();
     };
     Main.prototype.AgregarATabla = function (listaClientes) {
         var _this = this;
@@ -110,7 +111,12 @@ var Main = /** @class */ (function () {
         var chbNombre = this.utils.$("chbNombre");
         var chbApellido = this.utils.$("chbApellido");
         var chbEdad = this.utils.$("chbEdad");
-        this.LimpiarTabla();
+        while (trheader.lastChild) {
+            trheader.removeChild(trheader.lastChild);
+        }
+        while (tbody.lastChild) {
+            tbody.removeChild(tbody.lastChild);
+        }
         if (chbId.checked) {
             var th1 = document.createElement("th");
             th1.innerText = "Id";
@@ -156,6 +162,9 @@ var Main = /** @class */ (function () {
                 _this.EliminarUno(listaClientes.indexOf(cliente));
             };
             var tr = document.createElement("tr");
+            tr.onclick = function () {
+                _this.CargarForm(listaClientes.indexOf(cliente));
+            };
             if (chbId.checked) {
                 var td1 = document.createElement("td");
                 var tnId = document.createTextNode(id);
@@ -197,24 +206,11 @@ var Main = /** @class */ (function () {
     Main.prototype.displayForm = function (display) {
         if (display) {
             this.utils.$("formContainer").hidden = false;
-            //this.HabilitarOpcionesPorSexo();
         }
         else {
             this.utils.$("formContainer").hidden = true;
         }
     };
-    /*
-      public HabilitarOpcionesPorSexo() :void {
-        let tipo: string = (<HTMLInputElement>this.utils.$("tipoDeVehiculo")).value;
-        if (tipo == "Cliente") {
-          (<HTMLInputElement>this.utils.$("esAuto")).hidden = false;
-          (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = true;
-        }else {
-          (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = false;
-          (<HTMLInputElement>this.utils.$("esAuto")).hidden = true;
-        }
-      }
-    */
     Main.prototype.FiltrarPorSexo = function () {
         var tipo = this.utils.$("aplicaFiltro").value;
         if (tipo == 'Masculino') {
@@ -258,7 +254,6 @@ window.addEventListener("load", function (event) {
     var btnCerrar = handler.utils.$("btnCerrar");
     var btnCerrar2 = handler.utils.$("btnCerrar2");
     var btnAgregar = handler.utils.$("btnAgregar");
-    //let tipoVeh = <HTMLElement>handler.utils.$("tipoDeVehiculo");
     var aplicaFiltro = handler.utils.$("aplicaFiltro");
     var btnPromedio = handler.utils.$("btnPromedio");
     var chbId = handler.utils.$("chbId");
@@ -270,7 +265,6 @@ window.addEventListener("load", function (event) {
     btnCerrar.addEventListener("click", function (event) { return handler.handleEvent(event); });
     btnCerrar2.addEventListener("click", function (event) { return handler.handleEvent(event); });
     btnAgregar.addEventListener("click", function (event) { return handler.handleEvent(event); });
-    //tipoVeh.addEventListener("change", (event) => handler.handleEvent(event));
     aplicaFiltro.addEventListener("change", function (event) { return handler.handleEvent(event); });
     btnPromedio.addEventListener("click", function (event) { return handler.handleEvent(event); });
     chbId.addEventListener("change", function (event) { return handler.handleEvent(event); });

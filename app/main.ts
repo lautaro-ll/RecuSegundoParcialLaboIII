@@ -32,11 +32,6 @@ class Main implements EventListenerObject{
           case "btnAgregar":
             this.AgregarUno();
             break;
-          /*
-          case "tipoDeVehiculo":
-            this.HabilitarOpcionesPorSexo();
-            break;
-            */
           case "aplicaFiltro":
             this.FiltrarPorSexo();
             break;
@@ -102,7 +97,21 @@ class Main implements EventListenerObject{
     this.listaClientes.splice(id , 1);
     this.AgregarATabla(this.listaClientes);
   }
-
+  
+  public CargarForm(id:number) {
+    this.listaClientes[id];
+    (<HTMLInputElement>document.getElementById("inputNombre")).value = this.listaClientes[id].nombre;
+    (<HTMLInputElement>document.getElementById("inputApellido")).value = this.listaClientes[id].apellido;
+    (<HTMLInputElement>document.getElementById("inputEdad")).value = String(this.listaClientes[id].edad);
+    if(this.listaClientes[id].sexo == Sexo.Masculino) {
+      (<HTMLInputElement>document.getElementById("selectSexo")).value = "Masculino";
+    }
+    else {
+      (<HTMLInputElement>document.getElementById("selectSexo")).value = "Femenino";
+    }
+    this.displayForm(true);
+  }
+  
   public LimpiarLocalStorage() {
 
     localStorage.clear();
@@ -182,6 +191,9 @@ class Main implements EventListenerObject{
       };
 
       let tr: HTMLTableRowElement = document.createElement("tr");
+      tr.onclick = () =>{
+        this.CargarForm(listaClientes.indexOf(cliente))
+      };
 
       if(chbId.checked) {
 
@@ -228,23 +240,11 @@ class Main implements EventListenerObject{
   public displayForm(display:boolean) :void {
       if(display){
         (<HTMLInputElement>this.utils.$("formContainer")).hidden = false;
-        //this.HabilitarOpcionesPorSexo();
       }else{
         (<HTMLInputElement>this.utils.$("formContainer")).hidden = true;
       }
   }
-/*
-  public HabilitarOpcionesPorSexo() :void {
-    let tipo: string = (<HTMLInputElement>this.utils.$("tipoDeVehiculo")).value;
-    if (tipo == "Cliente") {
-      (<HTMLInputElement>this.utils.$("esAuto")).hidden = false;
-      (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = true;
-    }else {
-      (<HTMLInputElement>this.utils.$("esCamioneta")).hidden = false;
-      (<HTMLInputElement>this.utils.$("esAuto")).hidden = true;
-    }
-  }
-*/
+
   public FiltrarPorSexo() :void {
     let tipo = (<HTMLInputElement>this.utils.$("aplicaFiltro")).value;
 
@@ -292,7 +292,6 @@ window.addEventListener("load", (event) => {
     let btnCerrar = <HTMLElement>handler.utils.$("btnCerrar");
     let btnCerrar2 = <HTMLElement>handler.utils.$("btnCerrar2");
     let btnAgregar = <HTMLElement>handler.utils.$("btnAgregar");
-    //let tipoVeh = <HTMLElement>handler.utils.$("tipoDeVehiculo");
     let aplicaFiltro = <HTMLElement>handler.utils.$("aplicaFiltro");
     let btnPromedio = <HTMLElement>handler.utils.$("btnPromedio");
     let chbId = <HTMLElement>handler.utils.$("chbId");
@@ -300,13 +299,11 @@ window.addEventListener("load", (event) => {
     let chbApellido = <HTMLElement>handler.utils.$("chbApellido");
     let chbEdad = <HTMLElement>handler.utils.$("chbEdad");
 
-
     btnAlta.addEventListener("click", (event) => handler.handleEvent(event));
     btnLimpiar.addEventListener("click", (event) => handler.handleEvent(event));
     btnCerrar.addEventListener("click", (event) => handler.handleEvent(event));
     btnCerrar2.addEventListener("click", (event) => handler.handleEvent(event));
     btnAgregar.addEventListener("click", (event) => handler.handleEvent(event));
-    //tipoVeh.addEventListener("change", (event) => handler.handleEvent(event));
     aplicaFiltro.addEventListener("change", (event) => handler.handleEvent(event));
     btnPromedio.addEventListener("click", (event) => handler.handleEvent(event));
     chbId.addEventListener("change", (event) => handler.handleEvent(event));
